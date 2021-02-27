@@ -19,12 +19,11 @@ def read_layer_h5(path):
             for ith_layer in hdf[layer_type]:  # iterate over each layer
                 tmp_layer = hdf[layer_type][ith_layer]
                 layer_data = np.array(tmp_layer)
-                layer_meta = {key: val for key, val in tmp_layer.attrs.items()}
+                layer_meta = dict(tmp_layer.attrs)
                 if layer_type == 'labels':
-                    original_shape = layer_meta.pop(
-                        'shape')  # delete tmp shape attribute
-                    layer_data = reconstruct_layer(layer_data, original_shape)
-                output_list.append((layer_data, layer_meta, layer_type))
+                    original_shape = layer_meta.pop('shape')  # delete tmp shape attribute
+                    layer_data = reconstruct_layer(layer_data, tuple(original_shape))
+                output_list.append((layer_data, reconstruct_metadata(layer_meta), layer_type))
     return output_list
 
 
@@ -33,3 +32,10 @@ def reconstruct_layer(layer_array, shape):
     values = layer_array[-1]
     tmp_sparse = sparse.COO(coords=coords, data=values, shape=shape)
     return tmp_sparse.todense()
+
+
+def reconstruct_metadata(meta_dict):
+    metadata = {key[5:]: val for key, val in meta_dict.items() if key.startswith('meta_')}
+    meta_dict = {key: val for key, val in meta_dict.items() if not key.startswith('meta_')}
+    meta_dict['metadata'] = metadata
+    return meta_dict
