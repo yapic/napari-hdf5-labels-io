@@ -14,7 +14,10 @@ def project_to_h5(path, layer_types):
 
 def write_layers_h5(path, layer_data):
     with h5py.File(path, 'w') as hdf:
-        for data, meta, layer_type in layer_data:
+        # for data, meta, layer_type in layer_data:
+        for i, tmp_data in enumerate(layer_data):
+            data, meta, layer_type = tmp_data
+            meta['pos'] = i # layer position in napari
             layer_name = meta['name']
             if layer_type not in hdf.keys():  # check if the layer_type group already exists
                 hdf.create_group(layer_type)

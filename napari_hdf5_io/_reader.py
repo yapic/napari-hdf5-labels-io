@@ -13,7 +13,7 @@ def h5_to_napari(path):
 
 
 def read_layer_h5(path):
-    output_list = []
+    output_dict = {}
     with h5py.File(path, 'r') as hdf:
         for layer_type in hdf:  # iterate over layer types
             for ith_layer in hdf[layer_type]:  # iterate over each layer
@@ -23,8 +23,11 @@ def read_layer_h5(path):
                 if layer_type == 'labels':
                     original_shape = layer_meta.pop('shape')  # delete tmp shape attribute
                     layer_data = reconstruct_layer(layer_data, tuple(original_shape))
-                output_list.append((layer_data, reconstruct_metadata(layer_meta), layer_type))
-    return output_list
+                layer_position = layer_meta.pop('pos')
+                output_dict[layer_position] = (layer_data, reconstruct_metadata(layer_meta), layer_type)
+                #output_list.append((layer_data, reconstruct_metadata(layer_meta), layer_type))
+    #return output_list
+    return [output_dict[key] for key in sorted(output_dict.keys())]
 
 
 def reconstruct_layer(layer_array, shape):
