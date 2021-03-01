@@ -6,7 +6,7 @@
 [![tests](https://github.com/dlesmesl/napari-hdf5-io/workflows/tests/badge.svg)](https://github.com/dlesmesl/napari-hdf5-io/actions)
 [![codecov](https://codecov.io/gh/dlesmesl/napari-hdf5-io/branch/master/graph/badge.svg)](https://codecov.io/gh/dlesmesl/napari-hdf5-io)
 
-Napari plugin to store set of layers in a .h5 file. Label layer are stored in a sparse representation
+Napari plugin to store Napari projects in a .h5 file. Label layer are stored in a sparse representation (COO list).
 
 ----------------------------------
 
@@ -19,6 +19,18 @@ https://github.com/napari/cookiecutter-napari-plugin#getting-started
 and review the napari docs for plugin developers:
 https://napari.org/docs/plugins/index.html
 -->
+
+## Description
+
+This Napari plugin provides a writer and reader to store existing layers in the current Napari window, all the metadata is stored as well in a HDF5 file. All the stored preferences are included when a project file is opened.
+
+Label layers are stored in a coordinate list sparse representation with the [Sparse module](sparse.pydata.org) to keep the project file size minimum (aiming to implement this in other layers in the future).
+
+## HDF5 file architecture
+
+The project file is a HDF5 generated with the [h5py module](docs.h5py.org). The file groups correspond to the different Napari layer types and the layer metadata is stored as attributes of each layer.
+
+In the case of the meta dictionary which is nested in the LayerData meta dictionary (Napari IO), new keys are generated in the outer dictionary to use them as h5 dataset attributes. This nested dictionary architecture is reconstructed by the reader to ensure format compatibility.
 
 ## Installation
 
