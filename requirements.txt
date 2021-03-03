@@ -1,5 +1,6 @@
 napari-plugin-engine>=0.1.4
 typing
 numpy
+numba==0.53.0rc1.post1
 sparse
 h5py
