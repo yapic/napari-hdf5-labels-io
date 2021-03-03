@@ -28,8 +28,8 @@ setup(
     name='napari-hdf5-labels-io',
     author='Duway Nicolas Lesmes Leon',
     author_email='dlesmesleon@hotmail.com',
-    license='MIT',
-    url='https://github.com/dlesmesl/napari-hdf5-io',
+    license='GNU GPL v3.0',
+    url='https://github.com/yapic/napari-hdf5-labels-io',
     description='Napari plugin to store set of layers in a .h5 file. Label layer are stored in a sparse representation',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
@@ -49,7 +49,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Operating System :: OS Independent',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: GNU GPL v3.0 License',
     ],
     entry_points={
         'napari.plugin': [
