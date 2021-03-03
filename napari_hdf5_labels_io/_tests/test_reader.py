@@ -1,5 +1,5 @@
 import numpy as np
-from napari_hdf5_io import napari_get_reader
+from napari_hdf5_labels_io import napari_get_reader
 
 
 # tmp_path is a pytest fixture
