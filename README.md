@@ -1,10 +1,10 @@
-# napari-hdf5-io
+# napari-hdf5-labels-io
 
-[![License](https://img.shields.io/pypi/l/napari-hdf5-io.svg?color=green)](https://github.com/dlesmesl/napari-hdf5-io/raw/master/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/napari-hdf5-io.svg?color=green)](https://pypi.org/project/napari-hdf5-io)
+[![License](https://img.shields.io/pypi/l/napari-hdf5-io.svg?color=green)](https://github.com/yapic/napari-hdf5-labels-io/raw/master/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/napari-hdf5-io.svg?color=green)](https://pypi.org/project/napari-hdf5-labels-io)
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-hdf5-io.svg?color=green)](https://python.org)
-[![tests](https://github.com/dlesmesl/napari-hdf5-io/workflows/tests/badge.svg)](https://github.com/dlesmesl/napari-hdf5-io/actions)
-[![codecov](https://codecov.io/gh/dlesmesl/napari-hdf5-io/branch/master/graph/badge.svg)](https://codecov.io/gh/dlesmesl/napari-hdf5-io)
+[![tests](https://github.com/dlesmesl/napari-hdf5-io/workflows/tests/badge.svg)](https://github.com/yapic/napari-hdf5-labels-io/actions)
+[![codecov](https://codecov.io/gh/dlesmesl/napari-hdf5-io/branch/master/graph/badge.svg)](https://codecov.io/gh/yapic/napari-hdf5-labels-io)
 
 Napari plugin to store Napari projects in a .h5 file. Label layer are stored in a sparse representation (COO list).
 
