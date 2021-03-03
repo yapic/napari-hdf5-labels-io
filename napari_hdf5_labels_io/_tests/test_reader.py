@@ -13,7 +13,7 @@ def test_reader(tmp_path):
     original_shape, compressed_data = compress_layer(label_data)
 
     with h5py.File(my_test_file, 'w') as hdf:
-        labels = hdf_file.create_group('labels')
+        labels = hdf.create_group('labels')
         label1 = labels.create_dataset('1abel1', data=compressed_data)
         label1.attrs['shape'] = original_shape
         label1.attrs['pos'] = 0
