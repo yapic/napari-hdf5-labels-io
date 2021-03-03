@@ -1,5 +1,5 @@
 import numpy as np
-from napari_hdf5_labels_io import napari_get_reader
+from napari_hdf5_labels_io import h5_to_napari
 
 
 # tmp_path is a pytest fixture
@@ -12,7 +12,7 @@ def test_reader(tmp_path):
     np.save(my_test_file, original_data)
 
     # try to read it back in
-    reader = napari_get_reader(my_test_file)
+    reader = h5_to_napari(my_test_file)
     assert callable(reader)
 
     # make sure we're delivering the right format
@@ -26,5 +26,5 @@ def test_reader(tmp_path):
 
 
 def test_get_reader_pass():
-    reader = napari_get_reader("fake.file")
+    reader = h5_to_napari("fake.file")
     assert reader is None
