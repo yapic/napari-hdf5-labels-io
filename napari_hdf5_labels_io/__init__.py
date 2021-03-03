@@ -3,7 +3,5 @@ try:
 except ImportError:
     __version__ = "unknown"
 
-from ._reader import h5_to_napari
-from ._writer import project_to_h5
-
-
+from ._reader import h5_to_napari, reconstruct_layer
+from ._writer import project_to_h5, compress_layer

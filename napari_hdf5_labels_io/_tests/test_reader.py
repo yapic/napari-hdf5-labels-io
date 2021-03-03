@@ -1,6 +1,6 @@
 import numpy as np
 import h5py
-from napari_hdf5_labels_io import h5_to_napari
+from napari_hdf5_labels_io import h5_to_napari, compress_layer
 
 
 # tmp_path is a pytest fixture
@@ -9,9 +9,14 @@ def test_reader(tmp_path):
 
     # write some fake data using your supported file format
     my_test_file = str(tmp_path / "myfile.h5")
-    original_data = np.random.rand(20, 20)
+    label_data = np.random.choice((0, 1), (20, 20), p=[0.9, 0.1])
+    original_shape, compressed_data = compress_layer(label_data)
+
     with h5py.File(my_test_file, 'w') as hdf:
-        hdf.create_dataset("dummy", data=original_data)
+        labels = hdf_file.create_group('labels')
+        label1 = labels.create_dataset('1abel1', data=compressed_data)
+        label1.attrs['shape'] = original_shape
+        label1.attrs['pos'] = 0
 
     # try to read it back in
     reader = h5_to_napari(my_test_file)
