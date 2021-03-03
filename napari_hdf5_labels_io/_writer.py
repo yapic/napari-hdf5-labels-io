@@ -1,9 +1,8 @@
 """
 Module designed to write .h5 Napari projects
 """
-
-from napari_plugin_engine import napari_hook_implementation
 from typing import Callable
+from napari_plugin_engine import napari_hook_implementation
 import numpy as np
 import sparse
 import h5py
@@ -12,12 +11,12 @@ import h5py
 @napari_hook_implementation(specname='napari_get_writer')
 def project_to_h5(path: str) -> Callable or None:
     """Returns a h5 Napari project writer if the path file format is h5.
-    
+
     Parameters
     ----------
     path: str
         Napari h5 project file
-    
+
     Returns
     -------
     Callable or None
@@ -29,16 +28,16 @@ def project_to_h5(path: str) -> Callable or None:
         return None
 
 
-def write_layers_h5(path: str, layer_data: list[tuple[np.array, dict, str]]) -> str:
+def write_layers_h5(path, layer_data) -> str:
     """Returns a list of LayerData tuples from the project file required by Napari.
-    
+
     Parameters
     ----------
     path: str
         Napari h5 project output file
     layer_data: list[tuple[numpy array, dict, str]]
         List of LayerData tuples produced by Napari IO writer
-    
+
     Returns
     -------
     str
@@ -56,7 +55,9 @@ def write_layers_h5(path: str, layer_data: list[tuple[np.array, dict, str]]) -> 
                 # make compression in the same data variable
                 meta['shape'], data = compress_layer(data)
             hdf[layer_type].create_dataset(layer_name, data=data)
-            for key, val in process_metadata(meta).items():  # to add all metadata as attributes of each layer
+
+            # add all metadata as attributes of each layer
+            for key, val in process_metadata(meta).items():
                 try:
                     hdf[layer_type][layer_name].attrs[key] = val
                 except TypeError:
@@ -66,12 +67,12 @@ def write_layers_h5(path: str, layer_data: list[tuple[np.array, dict, str]]) -> 
 
 def compress_layer(layer_array: np.array) -> np.array:
     """Returns a numpy array corresponding to a sparse version of the original data array.
-    
+
     Parameters
     ----------
     layer_array: Numpy array
         Original array version of the layer data
-    
+
     Returns
     -------
     np.array
@@ -85,13 +86,14 @@ def compress_layer(layer_array: np.array) -> np.array:
 
 
 def process_metadata(meta_dict: dict) -> dict:
-    """Returns a dictionary including the optional layer metadata information (stored as a nested dictionary).
-    
+    """Returns a dictionary including the optional layer metadata
+    information (stored as a nested dictionary).
+
     Parameters
     ----------
     meta_dict: dict
         Dictionary of Napari layer attributes
-    
+
     Returns
     -------
     dict
