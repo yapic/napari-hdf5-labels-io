@@ -1,7 +1,7 @@
 # napari-hdf5-labels-io
 
-[![License](https://img.shields.io/pypi/l/napari-hdf5-io.svg?color=green)](https://github.com/yapic/napari-hdf5-labels-io/raw/master/LICENSE)
-[![PyPI](https://img.shields.io/pypi/v/napari-hdf5-io.svg?color=green)](https://pypi.org/project/napari-hdf5-labels-io)
+[![License](https://img.shields.io/pypi/l/napari-hdf5-labels-io.svg?color=green)](https://github.com/yapic/napari-hdf5-labels-io/raw/master/LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/napari-hdf5-labels-io.svg?color=green)](https://pypi.org/project/napari-hdf5-labels-io)
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-hdf5-labels-io.svg?color=green)](https://python.org)
 [![tests](https://github.com/yapic/napari-hdf5-labels-io/workflows/tests/badge.svg)](https://github.com/yapic/napari-hdf5-labels-io/actions)
 [![codecov](https://codecov.io/gh/yapic/napari-hdf5-labels-io/branch/master/graph/badge.svg)](https://codecov.io/gh/yapic/napari-hdf5-labels-io)
@@ -34,9 +34,9 @@ In the case of the meta dictionary which is nested in the LayerData meta diction
 
 ## Installation
 
-You can install `napari-hdf5-io` via [pip]:
+You can install `napari-hdf5-labels-io` via [pip]:
 
-    pip install napari-hdf5-io
+    pip install napari-hdf5-labels-io
 
 ## Contributing
 
