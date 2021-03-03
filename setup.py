@@ -22,10 +22,10 @@ with open('requirements.txt') as f:
 
 
 # https://github.com/pypa/setuptools_scm
-use_scm = {"write_to": "napari_hdf5_io/_version.py"}
+use_scm = {"write_to": "napari_hdf5_labels_io/_version.py"}
 
 setup(
-    name='napari-hdf5-io',
+    name='napari-hdf5-labels-io',
     author='Duway Nicolas Lesmes Leon',
     author_email='dlesmesleon@hotmail.com',
     license='MIT',
@@ -53,7 +53,7 @@ setup(
     ],
     entry_points={
         'napari.plugin': [
-            'napari-hdf5-io = napari_hdf5_io',
+            'napari-hdf5-labels-io = napari_hdf5_labels_io',
         ],
     },
 )
