@@ -1,4 +1,5 @@
 import numpy as np
+import h5py
 from napari_hdf5_labels_io import h5_to_napari
 
 
@@ -9,7 +10,8 @@ def test_reader(tmp_path):
     # write some fake data using your supported file format
     my_test_file = str(tmp_path / "myfile.h5")
     original_data = np.random.rand(20, 20)
-    np.save(my_test_file, original_data)
+    with h5py.File(my_test_file, 'w') as hdf:
+        hdf.create_dataset("dummy", data=original_data)
 
     # try to read it back in
     reader = h5_to_napari(my_test_file)
