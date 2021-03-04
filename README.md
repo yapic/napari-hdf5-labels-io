@@ -1,6 +1,6 @@
 # napari-hdf5-labels-io
 
-[![License](https://img.shields.io/pypi/l/napari-hdf5-labels-io.svg?color=green)](https://github.com/yapic/napari-hdf5-labels-io/blob/master/LICENSE)
+[![License](https://img.shields.io/pypi/l/napari-hdf5-labels-io.svg?color=green)](https://github.com/yapic/napari-hdf5-labels-io/raw/master/LICENSE)
 [![PyPI](https://img.shields.io/pypi/v/napari-hdf5-labels-io.svg?color=green)](https://pypi.org/project/napari-hdf5-labels-io)
 [![Python Version](https://img.shields.io/pypi/pyversions/napari-hdf5-labels-io.svg?color=green)](https://python.org)
 [![tests](https://github.com/yapic/napari-hdf5-labels-io/workflows/tests/badge.svg)](https://github.com/yapic/napari-hdf5-labels-io/actions)
