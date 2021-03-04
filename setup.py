@@ -22,7 +22,11 @@ with open('requirements.txt') as f:
 
 
 # https://github.com/pypa/setuptools_scm
-use_scm = {"write_to": "napari_hdf5_labels_io/_version.py"}
+# Currently incompatible with PyPi
+# use_scm = {"write_to": "napari_hdf5_labels_io/_version.py"}
+
+def local_scheme(version):
+    return ""
 
 setup(
     name='napari-hdf5-labels-io',
@@ -36,7 +40,7 @@ setup(
     packages=find_packages(),
     python_requires='>=3.6',
     install_requires=requirements,
-    use_scm_version=use_scm,
+    use_scm_version={"local_scheme": local_scheme},
     setup_requires=['setuptools_scm'],
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -49,7 +53,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Operating System :: OS Independent',
-        'License :: OSI Approved :: GNU GPL v3.0 License',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     ],
     entry_points={
         'napari.plugin': [

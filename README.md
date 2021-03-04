@@ -46,7 +46,7 @@ the coverage at least stays the same before you submit a pull request.
 ## License
 
 Distributed under the terms of the [GNU GPL v3.0] license,
-"napari-hdf5-io" is free and open source software
+"napari-hdf5-labels-io" is free and open source software.
 
 ## Issues
 
