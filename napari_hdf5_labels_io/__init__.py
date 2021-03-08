@@ -4,4 +4,4 @@ except ImportError:
     __version__ = "unknown"
 
 from ._reader import h5_to_napari, reconstruct_layer
-from ._writer import project_to_h5, compress_layer
+from ._writer import project_to_h5, napari_write_image, napari_write_labels, napari_write_points
