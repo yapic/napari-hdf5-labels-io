@@ -1,7 +1,7 @@
 """
 Module designed to write .h5 Napari projects
 """
-from typing import Callable
+from typing import Callable, Any, Optional
 from napari_plugin_engine import napari_hook_implementation
 import numpy as np
 import sparse
@@ -26,6 +26,21 @@ def project_to_h5(path: str) -> Callable or None:
         return write_layers_h5
     else:
         return None
+
+
+@napari_hook_implementation
+def napari_write_image(path: str, data: Any, meta: dict) -> Optional[str]:
+    return layer_writer(path, data, meta, layer_type='image')
+
+
+@napari_hook_implementation
+def napari_write_labels(path: str, data: Any, meta: dict) -> Optional[str]:
+    return layer_writer(path, data, meta, layer_type='labels', sparse=True)
+
+
+@napari_hook_implementation
+def napari_write_points(path: str, data: Any, meta: dict) -> Optional[str]:
+    return layer_writer(path, data, meta, layer_type='points')
 
 
 def write_layers_h5(path, layer_data) -> str:
@@ -65,7 +80,48 @@ def write_layers_h5(path, layer_data) -> str:
     return path
 
 
-def compress_layer(layer_array: np.array) -> np.array:
+def layer_writer(path: str, data: Any, meta: dict, layer_type: str, sparse: bool = False) -> str or None:
+    """Function to write single Napari layers in a h5 project file.
+
+    Parameters
+    ----------
+    path: str
+        Napari h5 project output file.
+    data: np.array
+        Napari layer data.
+    meta: dict
+        dictionary of Napari layer metadata.
+    layer_type: str
+        Napari layer type.
+    sparse: bool
+        True if Napari layer should be represented in COO list.
+
+
+    Returns
+    -------
+    str
+        Final output file path
+    """
+    if isinstance(path, str) and path.endswith('.h5'):
+        del meta['data'] # data key which stores the layer data
+        layer_name = meta['name']
+        meta['pos'] = 0
+        if sparse:
+            meta['shape'], data = compress_layer(data)
+        with h5py.File(path, 'w') as hdf:
+            hdf.create_group(layer_type)
+            hdf[layer_type].create_dataset(layer_name, data=data)
+            for key, val in process_metadata(meta).items():
+                try:
+                    hdf[layer_type][layer_name].attrs[key] = val
+                except TypeError:
+                    pass
+        return path
+    else:
+        return None
+
+
+def compress_layer(layer_array: np.array) -> tuple:
     """Returns a numpy array corresponding to a sparse version of the original data array.
 
     Parameters

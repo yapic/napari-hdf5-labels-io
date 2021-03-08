@@ -1,6 +1,7 @@
 import numpy as np
 import h5py
-from napari_hdf5_labels_io import h5_to_napari, compress_layer
+from napari_hdf5_labels_io._reader import h5_to_napari
+from napari_hdf5_labels_io._writer import compress_layer
 
 
 # tmp_path is a pytest fixture
