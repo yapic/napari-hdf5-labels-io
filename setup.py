@@ -38,7 +38,7 @@ setup(
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
     packages=find_packages(),
-    python_requires='<=3.8',
+    python_requires='<3.9',
     install_requires=requirements,
     use_scm_version={"local_scheme": local_scheme},
     setup_requires=['setuptools_scm'],
