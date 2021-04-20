@@ -6,7 +6,7 @@
 [![tests](https://github.com/yapic/napari-hdf5-labels-io/workflows/tests/badge.svg)](https://github.com/yapic/napari-hdf5-labels-io/actions)
 [![codecov](https://codecov.io/gh/yapic/napari-hdf5-labels-io/branch/master/graph/badge.svg)](https://codecov.io/gh/yapic/napari-hdf5-labels-io)
 
-Napari plugin to store Napari projects in a .h5 file. Label layer are stored in a sparse representation (COO list).
+napari plugin to store napari projects in a .h5 file. Label layer are stored in a sparse representation (COO list).
 
 ----------------------------------
 
@@ -22,15 +22,15 @@ https://napari.org/docs/plugins/index.html
 
 ## Description
 
-This Napari plugin provides a writer and reader to store existing layers in the current Napari window, all the metadata is stored as well in a HDF5 file. All the stored preferences are included when a project file is opened.
+This napari plugin provides a writer and reader to store existing layers in the current napari window, all the metadata is stored as well in a HDF5 file. All the stored preferences are included when a project file is opened.
 
 Label layers are stored in a coordinate list sparse representation with the [Sparse module](https://sparse.pydata.org/) to keep the project file size minimum (aiming to implement this in other layers in the future).
 
 ## HDF5 file architecture
 
-The project file is a HDF5 generated with the [h5py module](https://docs.h5py.org). The file groups correspond to the different Napari layer types and the layer metadata is stored as attributes of each layer.
+The project file is a HDF5 generated with the [h5py module](https://docs.h5py.org). The file groups correspond to the different napari layer types and the layer metadata is stored as attributes of each layer.
 
-In the case of the meta dictionary which is nested in the LayerData meta dictionary (Napari IO), new keys are generated in the outer dictionary to use them as h5 dataset attributes. This nested dictionary architecture is reconstructed by the reader to ensure format compatibility.
+In the case of the meta dictionary which is nested in the LayerData meta dictionary (napari IO), new keys are generated in the outer dictionary to use them as h5 dataset attributes. This nested dictionary architecture is reconstructed by the reader to ensure format compatibility.
 
 ## Installation
 
