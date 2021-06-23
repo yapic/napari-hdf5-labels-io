@@ -18,6 +18,7 @@ def test_reader(tmp_path):
         label1 = labels.create_dataset('1abel1', data=compressed_data)
         label1.attrs['shape'] = original_shape
         label1.attrs['pos'] = 0
+        label1.attrs['compressed'] = True
 
     # try to read it back in
     reader = h5_to_napari(my_test_file)

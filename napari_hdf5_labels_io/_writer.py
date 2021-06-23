@@ -44,7 +44,8 @@ def napari_write_points(path: str, data: Any, meta: dict) -> Optional[str]:
 
 
 def write_layers_h5(path, layer_data) -> str:
-    """Returns a list of LayerData tuples from the project file required by Napari.
+    """Returns a list of LayerData tuples from the
+    project file required by Napari.
 
     Parameters
     ----------
@@ -62,13 +63,17 @@ def write_layers_h5(path, layer_data) -> str:
         # for data, meta, layer_type in layer_data:
         for i, tmp_data in enumerate(layer_data):
             data, meta, layer_type = tmp_data
-            meta['pos'] = i # layer position in napari
+            meta['pos'] = i  # layer position in napari
             layer_name = meta['name']
-            if layer_type not in hdf.keys():  # check if the layer_type group already exists
+
+            # check if the layer_type group already exists
+            if layer_type not in hdf.keys():
                 hdf.create_group(layer_type)
             if layer_type == 'labels':
-                # make compression in the same data variable
-                meta['shape'], data = compress_layer(data)
+                compressed_shape, compressed_data = compress_layer(data)
+                if data.nbytes >= compressed_data.nbytes:
+                    meta['shape'], data = compressed_shape, compressed_data
+                meta['compressed'] = data.nbytes >= compressed_data.nbytes
             hdf[layer_type].create_dataset(layer_name, data=data)
 
             # add all metadata as attributes of each layer
@@ -80,7 +85,8 @@ def write_layers_h5(path, layer_data) -> str:
     return path
 
 
-def layer_writer(path: str, data: Any, meta: dict, layer_type: str, sparse: bool = False) -> str or None:
+def layer_writer(path: str, data: Any, meta: dict,
+                 layer_type: str, sparse: bool = False) -> str or None:
     """Function to write single Napari layers in a h5 project file.
 
     Parameters
@@ -103,7 +109,7 @@ def layer_writer(path: str, data: Any, meta: dict, layer_type: str, sparse: bool
         Final output file path
     """
     if isinstance(path, str) and path.endswith('.h5'):
-        del meta['data'] # data key which stores the layer data
+        del meta['data']  # data key which stores the layer data
         layer_name = meta['name']
         meta['pos'] = 0
         if sparse:
@@ -122,7 +128,8 @@ def layer_writer(path: str, data: Any, meta: dict, layer_type: str, sparse: bool
 
 
 def compress_layer(layer_array: np.array) -> tuple:
-    """Returns a numpy array corresponding to a sparse version of the original data array.
+    """Returns a numpy array corresponding to a sparse
+    version of the original data array.
 
     Parameters
     ----------
@@ -153,7 +160,8 @@ def process_metadata(meta_dict: dict) -> dict:
     Returns
     -------
     dict
-        dictionary without nested information (to store as h5 dataset attributes)
+        dictionary without nested information
+        (to store as h5 dataset attributes)
     """
     metadata = meta_dict.pop('metadata')
     for key, val in metadata.items():
