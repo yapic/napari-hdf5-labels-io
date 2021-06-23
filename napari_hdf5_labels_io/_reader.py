@@ -7,6 +7,7 @@ import numpy as np
 import sparse
 import h5py
 
+
 @napari_hook_implementation(specname='napari_get_reader')
 def h5_to_napari(path: str) -> Callable or None:
     """Returns a h5 Napari project reader if the path file format is h5.
@@ -26,8 +27,10 @@ def h5_to_napari(path: str) -> Callable or None:
     else:
         return None
 
+
 def read_layer_h5(path: str):
-    """Returns a list of LayerData tuples from the project file required by Napari.
+    """Returns a list of LayerData tuples from the project
+    file required by Napari.
 
     Parameters
     ----------
@@ -39,6 +42,7 @@ def read_layer_h5(path: str):
     list[tuple[numpy array, dict, str]]
         List of LayerData tuples required by Napari IO reader
     """
+    # use of list.pop() to delete the temporal attributes
     output_dict = {}
     with h5py.File(path, 'r') as hdf:
         for layer_type in hdf:  # iterate over layer types
@@ -47,11 +51,15 @@ def read_layer_h5(path: str):
                 layer_data = np.array(tmp_layer)
                 layer_meta = dict(tmp_layer.attrs)
                 if layer_type == 'labels':
-                    original_shape = layer_meta.pop('shape')  # delete tmp shape attribute
-                    layer_data = reconstruct_layer(layer_data, tuple(original_shape))
+                    compressed = layer_meta.pop('compressed')
+                    if compressed:
+                        original_shape = layer_meta.pop('shape')
+                        layer_data = reconstruct_layer(layer_data,
+                                                       tuple(original_shape))
                 layer_position = layer_meta.pop('pos')
                 output_dict[layer_position] = (layer_data,
-                                               reconstruct_metadata(layer_meta),
+                                               reconstruct_metadata(
+                                                   layer_meta),
                                                layer_type)
     layer_data_list = [output_dict[key] for key in sorted(output_dict.keys())]
     return layer_data_list
@@ -78,8 +86,10 @@ def reconstruct_layer(layer_array: np.array, shape: tuple) -> np.array:
     tmp_sparse = sparse.COO(coords=coords, data=values, shape=shape)
     return tmp_sparse.todense()
 
+
 def reconstruct_metadata(meta_dict: dict) -> dict:
-    """Returns a dictionary following the Napari specifications for meta data of layer.
+    """Returns a dictionary following the Napari specifications for
+    layer meta data.
 
     Parameters
     ----------
@@ -91,7 +101,9 @@ def reconstruct_metadata(meta_dict: dict) -> dict:
     dict
         dictionary with the Napari meta data key's distribution
     """
-    metadata = {key[5:]: val for key, val in meta_dict.items() if key.startswith('meta_')}
-    meta_dict = {key: val for key, val in meta_dict.items() if not key.startswith('meta_')}
+    metadata = {key[5:]: val for key,
+                val in meta_dict.items() if key.startswith('meta_')}
+    meta_dict = {key: val for key,
+                 val in meta_dict.items() if not key.startswith('meta_')}
     meta_dict['metadata'] = metadata
     return meta_dict
