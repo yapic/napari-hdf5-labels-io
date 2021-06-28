@@ -24,7 +24,7 @@ https://napari.org/docs/plugins/index.html
 
 This napari plugin provides a writer and reader to store existing layers in the current napari window, all the metadata is stored as well in a HDF5 file. All the stored preferences are included when a project file is opened.
 
-Label layers are stored in a coordinate list sparse representation with the [Sparse module](https://sparse.pydata.org/) to keep the project file size minimum (aiming to implement this in other layers in the future).
+Label layers are stored in a coordinate list sparse representation with the [Sparse module](https://sparse.pydata.org/) to keep the project file size minimum when possible (aiming to implement this in other layers in the future).
 
 ## HDF5 file architecture
 
