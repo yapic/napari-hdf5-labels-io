@@ -6,6 +6,7 @@ from napari_plugin_engine import napari_hook_implementation
 import numpy as np
 import sparse
 import h5py
+import warnings
 
 
 @napari_hook_implementation(specname='napari_get_reader')
@@ -51,7 +52,12 @@ def read_layer_h5(path: str):
                 layer_data = np.array(tmp_layer)
                 layer_meta = dict(tmp_layer.attrs)
                 if layer_type == 'labels':
-                    compressed = layer_meta.pop('compressed')
+                    try:
+                        compressed = layer_meta.pop('compressed')
+                    except KeyError:
+                        warnings.warn(
+                            "This file has an older plugin version.")
+                        compressed = True
                     if compressed:
                         original_shape = layer_meta.pop('shape')
                         layer_data = reconstruct_layer(layer_data,
