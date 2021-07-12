@@ -52,16 +52,19 @@ def read_layer_h5(path: str):
                 layer_data = np.array(tmp_layer)
                 layer_meta = dict(tmp_layer.attrs)
                 if layer_type == 'labels':
+                    original_shape = layer_meta.pop('shape')
                     try:
-                        compressed = layer_meta.pop('compressed')
+                        is_sparse = layer_meta.pop('is_sparse')
                     except KeyError:
                         warnings.warn(
                             "This file has an older plugin version.")
-                        compressed = True
-                    if compressed:
-                        original_shape = layer_meta.pop('shape')
+                        is_sparse = True
+                    if is_sparse:
                         layer_data = reconstruct_layer(tmp_layer,
                                                        tuple(original_shape))
+                    else:
+                        layer_data = tmp_layer[:] # read data from zarr array
+                        assert layer_data.shape == original_shape
                 layer_position = layer_meta.pop('pos')
                 output_dict[layer_position] = (layer_data,
                                                reconstruct_metadata(
