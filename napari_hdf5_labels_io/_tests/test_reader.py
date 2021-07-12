@@ -3,7 +3,6 @@ import h5py
 from napari_hdf5_labels_io._reader import h5_to_napari
 from napari_hdf5_labels_io._writer import compress_layer
 
-
 # tmp_path is a pytest fixture
 def test_reader(tmp_path):
     """An example of how you might test your plugin."""
@@ -11,14 +10,14 @@ def test_reader(tmp_path):
     # write some fake data using your supported file format
     my_test_file = str(tmp_path / "myfile.h5")
     label_data = np.random.choice((0, 1), (20, 20), p=[0.9, 0.1])
-    original_shape, compressed_data = compress_layer(label_data)
+    original_shape, compressed_data, is_sparse = compress_layer(label_data)
 
     with h5py.File(my_test_file, 'w') as hdf:
         labels = hdf.create_group('labels')
         label1 = labels.create_dataset('1abel1', data=compressed_data)
         label1.attrs['shape'] = original_shape
         label1.attrs['pos'] = 0
-        label1.attrs['compressed'] = True
+        label1.attrs['is_sparse'] = is_sparse
 
     # try to read it back in
     reader = h5_to_napari(my_test_file)
