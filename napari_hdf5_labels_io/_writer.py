@@ -6,7 +6,8 @@ from napari_plugin_engine import napari_hook_implementation
 import numpy as np
 import sparse
 import h5py
-
+import zarr
+from numcodecs import Blosc
 
 @napari_hook_implementation(specname='napari_get_writer')
 def project_to_h5(path: str) -> Callable or None:
@@ -35,7 +36,7 @@ def napari_write_image(path: str, data: Any, meta: dict) -> Optional[str]:
 
 @napari_hook_implementation
 def napari_write_labels(path: str, data: Any, meta: dict) -> Optional[str]:
-    return layer_writer(path, data, meta, layer_type='labels', sparse=True)
+    return layer_writer(path, data, meta, layer_type='labels')
 
 
 @napari_hook_implementation
@@ -70,10 +71,9 @@ def write_layers_h5(path, layer_data) -> str:
             if layer_type not in hdf.keys():
                 hdf.create_group(layer_type)
             if layer_type == 'labels':
-                compressed_shape, compressed_data = compress_layer(data)
-                if data.nbytes >= compressed_data.nbytes:
-                    meta['shape'], data = compressed_shape, compressed_data
-                meta['compressed'] = data.nbytes >= compressed_data.nbytes
+                compressed_shape, compressed_data, is_sparse = compress_layer(data)
+                meta['shape'], data = compressed_shape, compressed_data
+                meta['is_sparse'] = is_sparse
             hdf[layer_type].create_dataset(layer_name, data=data)
 
             # add all metadata as attributes of each layer
@@ -86,7 +86,7 @@ def write_layers_h5(path, layer_data) -> str:
 
 
 def layer_writer(path: str, data: Any, meta: dict,
-                 layer_type: str, sparse: bool = False) -> str or None:
+                 layer_type: str) -> str or None:
     """Function to write single Napari layers in a h5 project file.
 
     Parameters
@@ -99,9 +99,6 @@ def layer_writer(path: str, data: Any, meta: dict,
         dictionary of Napari layer metadata.
     layer_type: str
         Napari layer type.
-    sparse: bool
-        True if Napari layer should be represented in COO list.
-
 
     Returns
     -------
@@ -112,8 +109,7 @@ def layer_writer(path: str, data: Any, meta: dict,
         del meta['data']  # data key which stores the layer data
         layer_name = meta['name']
         meta['pos'] = 0
-        if sparse:
-            meta['shape'], data = compress_layer(data)
+        meta['shape'], data, meta['is_sparse'] = compress_layer(data)
         with h5py.File(path, 'w') as hdf:
             hdf.create_group(layer_type)
             hdf[layer_type].create_dataset(layer_name, data=data)
@@ -127,9 +123,10 @@ def layer_writer(path: str, data: Any, meta: dict,
         return None
 
 
-def compress_layer(layer_array: np.array) -> tuple:
-    """Returns a numpy array corresponding to a sparse
-    version of the original data array.
+def compress_layer(layer_array: np.array):
+    """
+    Returns compressed version of the original numpy array
+    based on memory efficient compression.
 
     Parameters
     ----------
@@ -138,14 +135,36 @@ def compress_layer(layer_array: np.array) -> tuple:
 
     Returns
     -------
-    np.array
-        Sparse version (COO list) of the layer data
+    layer_shape: tuple
+        Tuple containing shape of the layer_array
+    compressed_layer: np.array
+        Sparse version (COO list) of the layer data, if is_sparse == True
+        zarr array with zstd compression, if is_sparse == False
+    is_sparse: bool
+        True if Napari layer should be represented in COO list.
     """
-    initial_shape = tuple(layer_array.shape)
+    layer_shape = tuple(layer_array.shape)
+
+    # USE COORD LIST FOR SPARSE LABELLING
     tmp_coo = sparse.COO(layer_array)
-    compressed_array = np.append(tmp_coo.coords, np.array(
-        [tmp_coo.data]), axis=0)  # join coords and data in single array
-    return initial_shape, compressed_array.astype(np.int16)
+    # join coords and data in single array
+    coo_array = np.append(tmp_coo.coords,
+                          np.array([tmp_coo.data]), axis=0)
+    coo_array = coo_array.astype(np.uint16)
+
+    # USE ZSTD COMPRESSION FOR PREDICTIONS, higher clevel takes more time.
+    zarr_chunks = tuple([1 for i in range(len(layer_array.shape) - 2)] + [1024, 1024])
+    compressor = Blosc(cname='zstd', clevel=3, shuffle=Blosc.BITSHUFFLE)
+    data = layer_array.astype(np.uint16)
+    zarr_array = zarr.array(data, chunks=zarr_chunks, compressor=compressor)
+
+    if zarr_array.nbytes_stored >= coo_array.nbytes:
+        compressed_layer = coo_array
+        is_sparse = True
+    else:
+        compressed_layer = zarr_array
+        is_sparse = False
+    return layer_shape, compressed_layer, is_sparse
 
 
 def process_metadata(meta_dict: dict) -> dict:
