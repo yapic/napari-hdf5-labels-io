@@ -145,7 +145,7 @@ def compress_layer(layer_array: np.array) -> tuple:
     tmp_coo = sparse.COO(layer_array)
     compressed_array = np.append(tmp_coo.coords, np.array(
         [tmp_coo.data]), axis=0)  # join coords and data in single array
-    return initial_shape, compressed_array.astype(np.uint8)
+    return initial_shape, compressed_array.astype(np.int16)
 
 
 def process_metadata(meta_dict: dict) -> dict:

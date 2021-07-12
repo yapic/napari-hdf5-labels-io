@@ -60,7 +60,7 @@ def read_layer_h5(path: str):
                         compressed = True
                     if compressed:
                         original_shape = layer_meta.pop('shape')
-                        layer_data = reconstruct_layer(layer_data,
+                        layer_data = reconstruct_layer(tmp_layer,
                                                        tuple(original_shape))
                 layer_position = layer_meta.pop('pos')
                 output_dict[layer_position] = (layer_data,
@@ -87,6 +87,7 @@ def reconstruct_layer(layer_array: np.array, shape: tuple) -> np.array:
     np.array
         Full version of the layer data
     """
+    layer_array = np.array(layer_array, dtype=np.uint16)
     coords = layer_array[:-1]
     values = layer_array[-1]
     tmp_sparse = sparse.COO(coords=coords, data=values, shape=shape)
