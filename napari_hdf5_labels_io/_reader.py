@@ -64,7 +64,6 @@ def read_layer_h5(path: str):
                                                        tuple(original_shape))
                     else:
                         layer_data = tmp_layer[:] # read data from zarr array
-                        assert layer_data.shape == original_shape
                 layer_position = layer_meta.pop('pos')
                 output_dict[layer_position] = (layer_data,
                                                reconstruct_metadata(
