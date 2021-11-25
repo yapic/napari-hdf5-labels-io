@@ -30,11 +30,11 @@ def local_scheme(version):
 
 setup(
     name='napari-hdf5-labels-io',
-    author='Duway Nicolas Lesmes Leon',
-    author_email='dlesmesleon@hotmail.com',
+    author='Duway Nicolas Lesmes Leon, Pranjal Dhole',
+    author_email=('dlesmesleon@hotmail.com, dhole.pranjal@gmail.com'),
     license='GNU GPL v3.0',
     url='https://github.com/yapic/napari-hdf5-labels-io',
-    description='Napari plugin to store set of layers in a .h5 file. Label layer are stored in a sparse representation',
+    description='Napari plugin to store set of layers in a .h5 file. Label layer are stored in a sparse representation.',
     long_description=read('README.md'),
     long_description_content_type='text/markdown',
     packages=find_packages(),
