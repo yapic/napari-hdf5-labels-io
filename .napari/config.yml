@@ -1,0 +1,9 @@
+authors:
+  - name: Pranjal Dhole
+  - name: Duway Nicolas Lesmes Leon
+
+project_urls:
+    Project Site: https://yapic.github.io/napari-hdf5-labels-io/
+    Report Issues: https://github.com/yapic/napari-hdf5-labels-io/issues
+    Documentation: https://yapic.github.io/napari-hdf5-labels-io/
+
