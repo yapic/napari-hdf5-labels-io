@@ -56,8 +56,9 @@ setup(
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
     ],
     entry_points={
-        'napari.plugin': [
-            'napari-hdf5-labels-io = napari_hdf5_labels_io',
+        "napari.manifest": [
+            "napari-hdf5-labels-io = napari_hdf5_labels_io:napari.yaml",
         ],
     },
+    package_data={"napari_hdf5_labels_io": ["napari.yaml"]},
 )
